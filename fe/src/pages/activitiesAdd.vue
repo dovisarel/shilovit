@@ -2,8 +2,15 @@
   <q-page class="flex flex-center">
     <div class="q-pa-md" style="max-width: 400px">
       <h1 class="text-h4 text-center q-ma-none q-pb-lg">הוספת דיווח</h1>
-      <q-form class="q-gutter-xs">
-        <q-select v-model="activityType" :options="activitiesTypesList()" ___map-options label="סוג הפעילות" />
+      <q-form class="q-gutter-xs" @submit="doAdd">
+        <q-select
+          v-model="activityType"
+          label="סוג הפעילות"
+          :options="activitiesTypesList()"
+          emit-value
+          map-options
+          :rules="[val => !!val || 'לא נבחר סוג']"
+        />
 
         <q-input
           dense
@@ -44,7 +51,7 @@
           </template>
         </q-input>
 
-        <q-input dense label="סיום" dir="ltr" filled v-model="endTime" mask="time" :rules="['time']">
+        <q-input dense label="סיום" dir="ltr" filled v-model="endTime" mask="time">
           <template v-slot:prepend>
             <q-icon name="access_time" class="cursor-pointer">
               <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -59,7 +66,7 @@
         </q-input>
 
         <div>
-          <q-btn label="הוספה" color="primary" @click="doAdd" />
+          <q-btn type="submit" label="הוספה" color="primary" />
         </div>
       </q-form>
     </div>
@@ -90,8 +97,23 @@ export default {
     vadidateDate (dateString) {
       return date.isValid(dateString)
     },
-    doAdd () {
-      window.console.log('TODO: ...')
+    async doAdd () {
+      this.$q.loading.show()
+
+      const data = {
+        activityType: this.activityType,
+        date: this.date,
+        startTime: this.startTime,
+        endTime: this.endTime
+      }
+
+      try {
+        await this.$store.dispatch('activities/add', data)
+      } catch (error) {
+        throw error
+      } finally {
+        this.$q.loading.hide()
+      }
     }
   }
 }

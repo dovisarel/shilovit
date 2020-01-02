@@ -46,7 +46,15 @@ module.exports = function (ctx) {
       directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify',
+        'Loading'
+      ],
+
+      config: {
+        notify: { /* Notify defaults */ },
+        loading: { /* Loading defaults */ }
+      }
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie

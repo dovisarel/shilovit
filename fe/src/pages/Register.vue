@@ -13,6 +13,8 @@
             val => [8, 9].includes(val.trim().length) || 'קצר מידי',
             val => !/\D+/.test(val.trim()) || 'יש תווים לא תקינים',
           ]"
+          :error="errors.id_card && errors.id_card.length > 0"
+          :error-message="errors.id_card && errors.id_card[0]"
         />
 
         <q-input
@@ -22,6 +24,8 @@
           hint="שם מלא בעברית"
           lazy-rules
           :rules="[ val => val && val.length > 5 || 'קצר מידי']"
+          :error="errors.name && errors.name.length > 0"
+          :error-message="errors.name && errors.name[0]"
         />
 
         <q-input
@@ -34,6 +38,8 @@
             val => val && val.length > 6 || 'קצר מידי',
             val => /\S+@\S+\.\S+/.test(val.trim()) || 'מייל לא תקין',
           ]"
+          :error="errors.email && errors.email.length > 0"
+          :error-message="errors.email && errors.email[0]"
         />
 
         <q-input
@@ -43,6 +49,8 @@
           label="ססמה"
           lazy-rules
           :rules="[val => val && val.trim().length >= 6 || 'הססמה קצרה מידי']"
+          :error="errors.password && errors.password.length > 0"
+          :error-message="errors.password && errors.password[0]"
         />
 
         <!-- <q-toggle v-model="rememberMe" label="זכור אותי" /> -->
@@ -51,8 +59,6 @@
           <q-btn type="sumbit" label="הרשמה" color="primary" />
         </div>
       </q-form>
-
-      <pre dir="ltr">{{ errors }}</pre>
     </div>
   </q-page>
 </template>
@@ -67,7 +73,6 @@ export default {
       email: 'aa@aa.aa',
       password: '123456789',
       errors: {}
-    //   rememberMe: false
     }
   },
   methods: {
@@ -82,9 +87,13 @@ export default {
       try {
         await this.$store.dispatch('user/register', newUser)
 
-        this.$router.push('user/login')
+        this.$router.push('/user/login')
       } catch (error) {
-        this.errors = error.response.data.errors
+        if (error.response && error.response.data && error.response.data.errors) {
+          this.errors = error.response.data.errors
+        } else {
+          this.$q.notify('תקלה ביצירת המשתמש')
+        }
       }
     }
   }

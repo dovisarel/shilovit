@@ -3,23 +3,28 @@ import { axiosInstance } from 'boot/axios'
 // import Vue from 'vue'
 
 async function register (context, newUser) {
-  try {
-    const response = await axiosInstance.post('/user/register', newUser)
-    // const response = await Vue.$axios.post('/api/register', newUser)
-    const data = response.data
-    return data
-  } catch (error) {
-    throw error
-    // window.console.log(error)
-    // this.$q.notify({
-    //   color: 'negative',
-    //   position: 'top',
-    //   message: 'Loading failed',
-    //   icon: 'report_problem'
-    // })
-  }
+  const response = await axiosInstance.post('/user/register', newUser)
+  return response.data
+}
+
+async function login (context, data) {
+  const response = await axiosInstance.post('/user/login', data)
+  return response.data
+}
+
+async function logout (context, data) {
+  const response = await axiosInstance.post('/user/logout', data)
+  return response.data
+}
+
+async function getList (context, data) {
+  const response = await axiosInstance.get('/user/getList', data)
+  return response.data.users
 }
 
 export {
-  register
+  register,
+  login,
+  logout,
+  getList
 }

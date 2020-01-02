@@ -9,6 +9,16 @@
 
 define('LARAVEL_START', microtime(true));
 
+// print_r($_SERVER);die;
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("Access-Control-Allow-Origin: http://localhost:8086");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Headers: Authorization, Content-Type, Accept, Origin, x-csrf-token");
+    header("Access-Control-Allow-Credentials: true");
+    die(0);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -55,9 +65,10 @@ $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
 
-header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Origin: http://localhost:8086");
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, x-csrf-token');
+header("Access-Control-Allow-Credentials: true");
 
 $response->send();
 

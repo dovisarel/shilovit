@@ -14,14 +14,47 @@
         <q-toolbar-title>שילובית</q-toolbar-title>
 
         <div>
-          <q-btn icon="home" flat rounded to="/user/login" />
+          <!-- <q-btn icon="home" flat rounded to="/user/login" /> -->
+          <q-btn v-if="isAdmin" :label="user.name" icon="find_replace" flat rounded to="/user/list" />
+          <q-btn v-else :label="user.name" flat rounded to="/" />
         </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-2">
       <q-list>
-        <q-item-label header>קישורים חשובים חשובים</q-item-label>
+        <q-item-label header>קישורים חשובים</q-item-label>
+
+        <q-item clickable tag="a" to="/">
+          <q-item-section avatar>
+            <q-icon name="home" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>דף הבית</q-item-label>
+            <q-item-label caption>??? - ???</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable tag="a" to="/activities/list">
+          <q-item-section avatar>
+            <q-icon name="list" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>רשימת דיווחים</q-item-label>
+            <q-item-label caption>??? - ???</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable tag="a" to="/activities/add">
+          <q-item-section avatar>
+            <q-icon name="add" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>הוספת דיווח</q-item-label>
+            <q-item-label caption>??? - ???</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable tag="a" @click="doLogout">
           <q-item-section avatar>
             <q-icon name="logout" />
@@ -51,6 +84,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'AuthLayout',
   data () {
@@ -58,9 +93,27 @@ export default {
       leftDrawerOpen: false
     }
   },
+  computed: mapState({
+    isAuth: state => state.utilities.isAuth,
+    isAdmin: state => state.utilities.isAdmin,
+    user: state => state.utilities.user
+  }),
   methods: {
-    doLogout () {
-      window.console.log('TODO: logout ...pqxnr393wrc0aw9')
+    async doLogout () {
+      try {
+        await this.$store.dispatch('user/logout')
+
+        location.reload(true)
+      } catch (error) {
+        this.$q.notify('תקלה')
+      }
+    }
+  },
+  async mounted () {
+    await this.$store.dispatch('utilities/initialData')
+
+    if (!this.isAuth) {
+      this.$router.push('/user/login')
     }
   }
 }

@@ -14,6 +14,13 @@ const notAuthRouters = [
 
 const activitiesRouters = [
   {
+    path: '/user',
+    component: AuthLayout,
+    children: [
+      { path: 'list', component: () => import('pages/UsersList.vue') }
+    ]
+  },
+  {
     path: '/activities',
     component: AuthLayout,
     children: [

@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import utilities from './utilities'
 import user from './user'
+import activities from './activities'
 
 Vue.use(Vuex)
 
@@ -13,7 +15,9 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      user
+      utilities,
+      user,
+      activities
     },
 
     // enable strict mode (adds overhead!)

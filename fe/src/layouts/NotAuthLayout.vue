@@ -22,6 +22,17 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-2">
       <q-list>
         <q-item-label header>קישורים חשובים</q-item-label>
+
+        <q-item clickable tag="a" to="/user/login">
+          <q-item-section avatar>
+            <q-icon name="how_to_reg" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>התחברות</q-item-label>
+            <q-item-label caption>התחברות של תלמיד קיים</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable tag="a" to="/user/register">
           <q-item-section avatar>
             <q-icon name="add" />
@@ -51,11 +62,23 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'NotAuthLayout',
   data () {
     return {
       leftDrawerOpen: false
+    }
+  },
+  computed: mapState({
+    isAuth: state => state.utilities.isAuth
+  }),
+  async mounted () {
+    await this.$store.dispatch('utilities/initialData')
+
+    if (this.isAuth) {
+      this.$router.push('/')
     }
   }
 }

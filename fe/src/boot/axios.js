@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+window.console.log(process.env.NODE_ENV)
+
 const axiosInstance = axios.create({
-  baseURL: 'http://shilovit3.localhost/api/',
-  withCredentials: false
+  baseURL: process.env.NODE_ENV === 'development' ? 'http://shilovit3.localhost/' : '',
+  withCredentials: true
   //   timeout: 1000,
   //   headers: { 'X-Custom-Header': 'foobar' }
 })
