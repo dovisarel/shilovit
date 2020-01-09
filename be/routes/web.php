@@ -104,7 +104,6 @@ Route::middleware('auth')->get('/activities/list', function (Request $request) {
         ->get();
 
     return [
-        '__user_id' => $user_id,
         'activities' => $activities,
     ];
 });
@@ -133,6 +132,26 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
 
     return [
         // 'activities' => $activities,
+    ];
+});
+
+Route::middleware('auth')->get('/activities/getSummary', function (Request $request) {
+    $user_id = Auth::id();
+
+    // $validatedData = $request->validate([
+    //     'id_card' => 'bail|required|min:8|max:9|luhn|unique:users',
+    //     'name' => 'bail|required|min:5|max:50|unique:users',
+    //     'email' => 'bail|required|min:6|max:50|email:rfc|unique:users',
+    //     'password' => 'bail|required|min:6|max:20',
+    // ]);
+
+    $summary = App\Activity::getSummary($user_id, 2020);
+
+    return [
+        'activities' => $summary['items'],
+        'summary' => $summary['summary'],
+        'weeks' => $summary['weeks'],
+        'metadata' => $summary['metadata'],
     ];
 });
 

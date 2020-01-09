@@ -2,7 +2,7 @@ import { axiosInstance } from 'boot/axios'
 
 async function load (context, payload) {
   const data = {}
-  const response = await axiosInstance.get('/activities/list', data)
+  const response = await axiosInstance.get('/activities/getSummary', data)
 
   context.commit('setActivities', response.data)
 

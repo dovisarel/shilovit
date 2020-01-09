@@ -1,3 +1,8 @@
 export default {
-  activities: []
+  activities: [],
+  metadata: {},
+  weeks: {},
+  summary: {
+    total: {}
+  }
 }

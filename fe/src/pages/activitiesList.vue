@@ -17,7 +17,7 @@
 
 <script>
 import { date } from 'quasar'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 
 const diffInMinute = function (end, start) {
   if (!start || !end) {
@@ -50,38 +50,16 @@ export default {
         // { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
         // { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         // { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-      ],
-      data111: [
-        {
-          type_name: 'לימוד',
-          timeStart: '2019-11-21 12:00:00',
-          timeEnd: '2019-11-21 13:00:00'
-        },
-        {
-          type_name: 'לימוד',
-          timeStart: '2019-11-22 13:00:00'
-        //   timeEnd: '2019-11-22 14:00:00'
-        },
-        {
-          type_name: 'שיעור אמונה',
-          timeStart: '2019-11-27 15:00:23',
-          timeEnd: '2019-11-27 17:00:23'
-        },
-        {
-          type_name: 'לימוד',
-          timeStart: '2019-11-25 09:00:00',
-          timeEnd: '2019-11-25 09:30:00'
-        }
       ]
     }
   },
   computed: {
-    // activities () {
-    //   return this.data111
-    // },
-    ...mapState('activities', [
-      'activities'
-    ])
+    activities () {
+      return Object.values(this.$store.state.activities.activities)
+    }
+    // ...mapState('activities', [
+    //   'activities'
+    // ])
   },
   methods: {
     editRow (e, row) {
