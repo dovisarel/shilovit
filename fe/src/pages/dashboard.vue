@@ -8,9 +8,9 @@
           <tr>
             <th class="text-center" colspan="3">
                 <h4 class="q-ma-sm text-secondary" >סיכום שנתי</h4>
-                <q-linear-progress color="secondary" size="20px" :value="yearLeft / 100" >
+                <q-linear-progress color="secondary" size="20px" :value="metadata.yearLeft / 100" >
                     <div class="absolute-full flex flex-center">
-                        <q-badge color="white" text-color="accent" :label="`${yearLeft}% מהשנה עברו`" transparent />
+                        <q-badge color="white" text-color="accent" :label="`${metadata.yearLeft}% מהשנה עברו`" transparent />
                         <!-- <q-badge color="white" text-color="accent" :label="`${yearLeft} חודשים מהשנה עברו`" transparent /> -->
                     </div>
               </q-linear-progress>
@@ -123,6 +123,10 @@
           </tr>
         </tbody>
       </q-markup-table>
+
+      <q-page-sticky position="bottom-right" :offset="[20, 20]">
+        <q-btn fab icon="add" color="accent" to="/activities/add" />
+      </q-page-sticky>
 
       <!-- <pre dir="ltr">{{ summary }}</pre> -->
     </div>

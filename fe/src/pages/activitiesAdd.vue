@@ -4,12 +4,14 @@
       <h1 class="text-h4 text-center q-ma-none q-pb-lg">הוספת דיווח</h1>
       <q-form class="q-gutter-xs" @submit="doAdd">
         <q-select
-          v-model="activityType"
+          v-model="activityTypeConfig"
           label="סוג הפעילות"
           :options="activitiesTypesList()"
-          emit-value
+          __emit-value
           map-options
-          :rules="[val => !!val || 'לא נבחר סוג']"
+          :rules="[
+            val => val.value || 'לא נבחר סוג',
+          ]"
         />
 
         <q-input
@@ -51,7 +53,7 @@
           </template>
         </q-input>
 
-        <q-input dense label="סיום" dir="ltr" filled v-model="endTime" mask="time">
+        <q-input v-if="_.get(activityTypeConfig, 'showEndTime')" dense label="סיום" dir="ltr" filled v-model="endTime" mask="time" :rules="[() => true]">
           <template v-slot:prepend>
             <q-icon name="access_time" class="cursor-pointer">
               <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -65,6 +67,24 @@
           </template>
         </q-input>
 
+        <q-input
+          v-if="_.get(activityTypeConfig, 'showScore')"
+          type="text"
+          dense
+          min="0"
+          max="100"
+          label="ציון"
+          dir="ltr"
+          filled
+          :autofocus="false"
+          v-model.number="score"
+          :rules="[
+            val => _.toSafeInteger(val) == val || 'הציון חייב להיות מספר שלם',
+            val => val > 0 || 'הציון לא יכול להיות מתחת אפס',
+            val => val <= 100 || 'הציון לא יכול להיות מעל 100'
+          ]"
+        />
+
         <div>
           <q-btn type="submit" label="הוספה" color="primary" />
         </div>
@@ -75,23 +95,34 @@
 
 <script>
 import { date } from 'quasar'
+import _ from 'lodash'
 
 export default {
   name: 'PageActivitiesAdd',
   data () {
     return {
-      activityType: null,
+      activityTypeConfig: {},
       date: date.formatDate(Date.now(), 'YYYY-MM-DD'),
       startTime: date.formatDate(Date.now(), 'H:mm'),
-      endTime: ''
+      endTime: '',
+      score: null
+    }
+  },
+  computed: {
+    _: () => _, // lodash
+    activityType () {
+      return _.get(this.activityTypeConfig, 'value')
+      // return this.activityTypeConfig && this.activityTypeConfig.value
     }
   },
   methods: {
     activitiesTypesList () {
       return [
-        { label: 'לימוד', value: 1, description: 'Search engine' },
-        { label: 'שיעור אמונה', value: 2, description: 'Search engine' },
-        { label: 'שיעור הלכה', value: 3, description: 'Search engine' }
+        { label: 'לימוד', value: 1, showEndTime: true },
+        { label: 'שיעור אמונה', value: 2, showEndTime: true },
+        { label: 'שיעור הלכה', value: 3, showEndTime: true },
+        { label: 'מבחן חודשי', value: 4, showScore: true },
+        { label: 'יחידות שקידה', value: 5, showEndTime: true }
       ]
     },
     vadidateDate (dateString) {
@@ -104,7 +135,8 @@ export default {
         activityType: this.activityType,
         date: this.date,
         startTime: this.startTime,
-        endTime: this.endTime
+        endTime: this.endTime,
+        score: this.score || 0
       }
 
       try {

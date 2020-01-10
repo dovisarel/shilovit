@@ -22,6 +22,24 @@ class Activity extends Model
     protected $appends = ['type_name'];
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'options' => '[]',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'options' => 'array',
+    ];
+
+    /**
      * Get the administrator flag for the user.
      *
      * @return bool
@@ -77,14 +95,16 @@ class Activity extends Model
                 'year_desired_sum' => 70,
             ],
             self::TYPE_MONTHLY_TEST => [
-                'max_per_month' => 3,
+                'max_per_week' => 2,
+                // 'max_per_month' => 3,
                 'max_total' => 10,
                 'year_desired_sum' => 10,
             ],
             self::TYPE_DILIGENCE_LEARNING => [
+                'max_per_week' => 4 * 60 * 60,// 4 hour
                 'max_per_month' => 8 * 60 * 60,// 8 hour
                 'method_calculation' => 'time_diff',
-                'min_one_item' => 30 * 60,// half hour
+                // 'min_one_item' => 30 * 60,// half hour
                 'max_total' => 10 * 8 * 60 * 60,// 8 hour * 10 months
                 'year_desired_sum' => 0,
             ],
@@ -240,6 +260,8 @@ class Activity extends Model
             'firstWeek' => Week::getWeekId($startYear),
             'currWeek' => Week::getWeekId(date_create('now')),
             'lastWeek' => Week::getWeekId($endYear),
+
+            'yearLeft'=> round(100 * (time() - $startYear->format('U')) / ($endYear->format('U') - $startYear->format('U')), 2),
         ];
 
         $weeks = Week::where('id', '>=', $metadata['firstWeek'])

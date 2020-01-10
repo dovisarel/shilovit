@@ -68,10 +68,10 @@ export default {
   name: 'PageRegister',
   data () {
     return {
-      idCard: '123456789',
-      name: 'aaaaaa',
-      email: 'aa@aa.aa',
-      password: '123456789',
+      idCard: '',
+      name: '',
+      email: '',
+      password: '',
       errors: {}
     }
   },

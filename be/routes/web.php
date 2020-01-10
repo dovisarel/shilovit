@@ -115,6 +115,7 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
         'date' => 'bail|required|date',
         'startTime' => 'bail|required',
         'endTime' => 'bail|nullable',
+        'score' => 'bail|numeric|integer|min:0|max:100',
     ]);
 
     $activity = new App\Activity;
@@ -126,12 +127,18 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
         $activity->time_end = date_create($validatedData['date'] . ' ' . $validatedData['endTime']);
     }
 
-    $activity->options = '[]';
+    // $activity->options = '[]';
+
+    if ($validatedData['activityType'] == App\Activity::TYPE_MONTHLY_TEST) {
+        $temp_options = $activity->options;
+        $temp_options['score'] = $validatedData['score'];
+        $activity->options = $temp_options;
+    }
 
     $activity->save();
 
     return [
-        // 'activities' => $activities,
+        'activity' => $activity,
     ];
 });
 

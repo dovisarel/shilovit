@@ -38,8 +38,8 @@ export default {
   data () {
     return {
       errors: [],
-      id_card: '300460151',
-      password: '56546465',
+      id_card: '',
+      password: '',
       rememberMe: false
     }
   },
