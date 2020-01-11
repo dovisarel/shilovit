@@ -39,7 +39,7 @@
           </template>
         </q-input>
 
-        <q-input dense label="התחלה" dir="ltr" filled v-model="startTime" mask="time" :rules="['time']">
+        <q-input  v-if="_.get(activityTypeConfig, 'showStartTime')" dense label="התחלה" dir="ltr" filled v-model="startTime" mask="time" :rules="['time']">
           <template v-slot:prepend>
             <q-icon name="access_time" class="cursor-pointer">
               <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -118,11 +118,11 @@ export default {
   methods: {
     activitiesTypesList () {
       return [
-        { label: 'לימוד', value: 1, showEndTime: true },
-        { label: 'שיעור אמונה', value: 2, showEndTime: true },
-        { label: 'שיעור הלכה', value: 3, showEndTime: true },
+        { label: 'לימוד', value: 1, showStartTime: true, showEndTime: true },
+        { label: 'שיעור הרב יזהר', value: 2 },
+        { label: 'שיעור הרב מלמד', value: 3 },
         { label: 'מבחן חודשי', value: 4, showScore: true },
-        { label: 'יחידות שקידה', value: 5, showEndTime: true }
+        { label: 'יחידות שקידה', value: 5, showStartTime: true, showEndTime: true }
       ]
     },
     vadidateDate (dateString) {
@@ -140,8 +140,18 @@ export default {
       }
 
       try {
-        await this.$store.dispatch('activities/add', data)
+        const res = await this.$store.dispatch('activities/add', data)
+
+        if (res) {
+          this.$q.notify('נשמר בהצלחה')
+        }
       } catch (error) {
+        const data = _.get(error, 'response.data')
+        this.$q.notify({
+          message: data.message,
+          caption: Object.values(data.errors)[0][0],
+          multiLine: true
+        })
         throw error
       } finally {
         this.$q.loading.hide()

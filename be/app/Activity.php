@@ -135,7 +135,7 @@ class Activity extends Model
             $type = (int) $el->type_id;
             $configPerType = Arr::get($config, $type);
 
-            $weekId = week::getWeekId(date_create($el->time_start));
+            $weekId = Week::getWeekId(date_create($el->time_start));
             $monthId = date_create($el->time_start)->format('n');
 
             if (! Arr::has($weeksData, implode('.', [$weekId, $type]))) {

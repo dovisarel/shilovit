@@ -112,8 +112,8 @@ Route::middleware('auth')->get('/activities/list', function (Request $request) {
 Route::middleware('auth')->post('/activities/add', function (Request $request) {
     $validatedData = $request->validate([
         'activityType' => 'bail|required|min:1|max:9',
-        'date' => 'bail|required|date',
-        'startTime' => 'bail|required',
+        'date' => 'bail|required|date|after_or_equal:2019-11-01|before_or_equal:now',
+        'startTime' => 'bail|nullable',
         'endTime' => 'bail|nullable',
         'score' => 'bail|numeric|integer|min:0|max:100',
     ]);

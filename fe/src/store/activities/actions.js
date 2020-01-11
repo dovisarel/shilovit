@@ -10,7 +10,9 @@ async function load (context, payload) {
 }
 
 async function add (_, payload) {
-  await axiosInstance.post('/activities/add', payload)
+  const res = await axiosInstance.post('/activities/add', payload)
+  window.console.log(res)
+  // if res.
 
   return true
 }
