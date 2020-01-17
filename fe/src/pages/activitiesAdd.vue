@@ -6,7 +6,7 @@
         <q-select
           v-model="activityTypeConfig"
           label="סוג הפעילות"
-          :options="activitiesTypesList()"
+          :options="activitiesTypesList"
           __emit-value
           map-options
           :rules="[
@@ -67,6 +67,27 @@
           </template>
         </q-input>
 
+        <q-select
+          v-if="_.get(activityTypeConfig, 'showTestsList')"
+          v-model="options.testId"
+          label="שם המבחן"
+          :options="testsList"
+          emit-value
+          map-options
+          :rules="[
+            val => val || 'לא נבחר סוג',
+          ]"
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+              <q-item-section>
+                <q-item-label >{{ scope.opt.label }}</q-item-label>
+                <q-item-label caption>{{ scope.opt.description }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+
         <q-input
           v-if="_.get(activityTypeConfig, 'showScore')"
           type="text"
@@ -77,7 +98,7 @@
           dir="ltr"
           filled
           :autofocus="false"
-          v-model.number="score"
+          v-model.number="options.score"
           :rules="[
             val => _.toSafeInteger(val) == val || 'הציון חייב להיות מספר שלם',
             val => val > 0 || 'הציון לא יכול להיות מתחת אפס',
@@ -96,6 +117,7 @@
 <script>
 import { date } from 'quasar'
 import _ from 'lodash'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PageActivitiesAdd',
@@ -105,26 +127,22 @@ export default {
       date: date.formatDate(Date.now(), 'YYYY-MM-DD'),
       startTime: date.formatDate(Date.now(), 'H:mm'),
       endTime: '',
-      score: null
+      options: {
+        testId: 0
+      }
     }
   },
   computed: {
     _: () => _, // lodash
+    ...mapState({
+      activitiesTypesList: state => state.activities.types,
+      testsList: state => state.activities.testsList
+    }),
     activityType () {
       return _.get(this.activityTypeConfig, 'value')
-      // return this.activityTypeConfig && this.activityTypeConfig.value
     }
   },
   methods: {
-    activitiesTypesList () {
-      return [
-        { label: 'לימוד', value: 1, showStartTime: true, showEndTime: true },
-        { label: 'שיעור הרב יזהר', value: 2 },
-        { label: 'שיעור הרב מלמד', value: 3 },
-        { label: 'מבחן חודשי', value: 4, showScore: true },
-        { label: 'יחידות שקידה', value: 5, showStartTime: true, showEndTime: true }
-      ]
-    },
     vadidateDate (dateString) {
       return date.isValid(dateString)
     },
@@ -136,8 +154,10 @@ export default {
         date: this.date,
         startTime: this.startTime,
         endTime: this.endTime,
-        score: this.score || 0
+        options: this.options
       }
+
+      window.console.log(data)
 
       try {
         const res = await this.$store.dispatch('activities/add', data)

@@ -112,10 +112,11 @@ Route::middleware('auth')->get('/activities/list', function (Request $request) {
 Route::middleware('auth')->post('/activities/add', function (Request $request) {
     $validatedData = $request->validate([
         'activityType' => 'bail|required|min:1|max:9',
-        'date' => 'bail|required|date|after_or_equal:2019-11-01|before_or_equal:now',
+        'date' => 'bail|required|date|after_or_equal:2019-11-01|before_or_equal:tomorrow',
         'startTime' => 'bail|nullable',
         'endTime' => 'bail|nullable',
-        'score' => 'bail|numeric|integer|min:0|max:100',
+        'options.score' => 'bail|nullable|required_if:activityType,4|numeric|integer|min:0|max:100',
+        'options.testId' => 'bail|nullable|required_if:activityType,4|numeric|integer|min:0',
     ]);
 
     $activity = new App\Activity;
@@ -123,17 +124,20 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
     $activity->user_id = Auth::id();
     $activity->type_id = $validatedData['activityType'];
     $activity->time_start = date_create($validatedData['date'] . ' ' . $validatedData['startTime']);
+
     if ($validatedData['endTime']) {
         $activity->time_end = date_create($validatedData['date'] . ' ' . $validatedData['endTime']);
     }
 
-    // $activity->options = '[]';
+    $temp_options = $activity->options;
 
     if ($validatedData['activityType'] == App\Activity::TYPE_MONTHLY_TEST) {
-        $temp_options = $activity->options;
-        $temp_options['score'] = $validatedData['score'];
-        $activity->options = $temp_options;
+        $temp_options['testId'] = Arr::get($validatedData, 'options.testId', 0);
+        $temp_options['score'] = Arr::get($validatedData, 'options.score', 0);
     }
+    $activity->options = $temp_options;
+
+    // return $activity;
 
     $activity->save();
 

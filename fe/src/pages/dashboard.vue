@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>לימוד עצמי</td>
+            <td>{{ getActivityName(1) }}</td>
             <td>{{ secToHhMm(getYearValue(1)) }} שעות</td>
             <td>
               <q-linear-progress color="primary" size="20px" :value="getYearPercent(1) / 100" >
@@ -37,7 +37,7 @@
             </td>
           </tr>
           <tr>
-            <td>שיעורי הלכה</td>
+            <td>{{ getActivityName(2) }}</td>
             <td>{{ getYearValue(2) }}</td>
             <td>
               <q-linear-progress color="primary" size="20px" :value="getYearPercent(2) / 100" >
@@ -48,7 +48,7 @@
             </td>
           </tr>
           <tr>
-            <td>שיעורי אמונה</td>
+            <td>{{ getActivityName(3) }}</td>
             <td>{{ getYearValue(3) }}</td>
             <td>
               <q-linear-progress color="primary" size="20px" :value="getYearPercent(3) / 100" >
@@ -59,7 +59,7 @@
             </td>
           </tr>
           <tr>
-            <td>מבחנים</td>
+            <td>{{ getActivityName(4) }}</td>
             <td>{{ getYearValue(4) }}</td>
             <td>
               <q-linear-progress color="primary" size="20px" :value="getYearPercent(4) / 100" >
@@ -70,8 +70,8 @@
             </td>
           </tr>
           <tr>
-            <td>יחידות לימוד שקידה</td>
-            <td colspan="2">{{ getYearValue(5) }}</td>
+            <td>{{ getActivityName(5) }}</td>
+            <td colspan="2" class="text-center">{{ secToHhMm(getYearValue(5)) }} שעות</td>
           </tr>
         </tbody>
       </q-markup-table>
@@ -93,24 +93,29 @@
         </thead>
         <tbody>
           <tr>
-            <td>לימוד עצמי</td>
+            <td>{{ getActivityName(1) }}</td>
             <td>{{ secToHhMm(getWeekValue(weekId, 1)) }} שעות</td>
             <td class="text-accent">{{ secToHhMm(5 * 60 * 60) }} שעות</td>
           </tr>
           <tr>
-            <td>שיעורי הלכה</td>
+            <td>{{ getActivityName(2) }}</td>
             <td>{{ getWeekValue(weekId, 2) }}</td>
             <td class="text-accent">{{ 2 }}</td>
           </tr>
           <tr>
-            <td>שיעורי אמונה</td>
+            <td>{{ getActivityName(3) }}</td>
             <td>{{ getWeekValue(weekId, 3) }}</td>
             <td class="text-accent">{{ 2 }}</td>
           </tr>
           <tr>
-            <td>מבחנים</td>
+            <td>{{ getActivityName(4) }}</td>
             <td>{{ getWeekValue(weekId, 4) }}</td>
             <td class="text-accent">1 בחודש</td>
+          </tr>
+          <tr>
+            <td>{{ getActivityName(5) }}</td>
+            <td>{{ secToHhMm(getWeekValue(weekId, 5)) }} שעות</td>
+            <td class="text-accent">רשות - לא נדרש</td>
           </tr>
           <tr>
             <td colspan="3">
@@ -166,14 +171,9 @@ export default {
   computed: {
     _: () => _, // lodash
     secToHhMm: () => secToHhMm,
-    // _ () {
-    //   return _
-    // },
     activities () {
       return Object.values(this.$store.state.activities.activities)
     },
-    yearLeft: () => 20,
-    // yearLeft: () => 3,
     ...mapState('activities', [
       'summary',
       'metadata',
@@ -181,6 +181,9 @@ export default {
     ])
   },
   methods: {
+    getActivityName (id) {
+      return this.$store.getters['activities/getName'](id)
+    },
     getWeekValue (weekId, type) {
       return _.get(this.summary, `weeks.${weekId}.${type}.sum`)
     },

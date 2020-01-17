@@ -19,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     die(0);
 }
 
+header("Access-Control-Allow-Origin: http://localhost:8086");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, x-csrf-token');
+header("Access-Control-Allow-Credentials: true");
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -66,7 +71,7 @@ $response = $kernel->handle(
 );
 
 header("Access-Control-Allow-Origin: http://localhost:8086");
-header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, x-csrf-token');
 header("Access-Control-Allow-Credentials: true");
 

@@ -53,10 +53,10 @@ class Activity extends Model
     {
         $names = [
             self::TYPE_SELF_LEARNING => 'לימוד עצמי',
-            self::TYPE_HALACHA_LESSON => 'שיעור הלכה',
-            self::TYPE_EMONA_LESSON => 'שיעור אמונה',
-            self::TYPE_MONTHLY_TEST => 'מבחן',
-            self::TYPE_DILIGENCE_LEARNING => 'לימוד - שקידה',
+            self::TYPE_HALACHA_LESSON => 'שיעור הרב מלמד',
+            self::TYPE_EMONA_LESSON => 'שיעור הרב יזהר',
+            self::TYPE_MONTHLY_TEST => 'מבחן חודשי',
+            self::TYPE_DILIGENCE_LEARNING => 'יחידות שקידה',
         ];
 
         return $names[$type_id] ?? '[לא ידוע]';
@@ -96,7 +96,7 @@ class Activity extends Model
             ],
             self::TYPE_MONTHLY_TEST => [
                 'max_per_week' => 2,
-                // 'max_per_month' => 3,
+                'max_per_month' => 10,
                 'max_total' => 10,
                 'year_desired_sum' => 10,
             ],
