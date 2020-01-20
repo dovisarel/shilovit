@@ -13,3 +13,9 @@ export function getTestConfig (state) {
     return _.find(state.testsList, { 'value': id })
   }
 }
+
+export function getByID (state) {
+  return function (id) {
+    return state.activities[id]
+  }
+}

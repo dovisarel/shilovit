@@ -3,6 +3,13 @@
     <div class="full-width q-pa-md" style="max-width: 560px">
       <!-- <h1 class="text-h4 text-center q-ma-none q-pb-lg">סיכום</h1> -->
 
+      <div class="bg-white shadow-2 rounded-borders row q-mb-md q-pa-md" >
+        <div class="text-primary">לשים לב:</div>
+        עקב באג אולי התחלפו הדיווחים על השיעורים של הרב מלמד והרב יזהר,
+        <br>
+        נא לבדוק שהדיווח שלכם תקין.
+      </div>
+
       <q-markup-table>
         <thead>
           <tr>
@@ -36,17 +43,7 @@
               </q-linear-progress>
             </td>
           </tr>
-          <tr>
-            <td>{{ getActivityName(2) }}</td>
-            <td>{{ getYearValue(2) }}</td>
-            <td>
-              <q-linear-progress color="primary" size="20px" :value="getYearPercent(2) / 100" >
-                <div class="absolute-full flex flex-center">
-                    <q-badge color="white" text-color="accent" :label="`${getYearPercent(2)}%`" transparent />
-                </div>
-              </q-linear-progress>
-            </td>
-          </tr>
+
           <tr>
             <td>{{ getActivityName(3) }}</td>
             <td>{{ getYearValue(3) }}</td>
@@ -58,6 +55,19 @@
               </q-linear-progress>
             </td>
           </tr>
+
+          <tr>
+            <td>{{ getActivityName(2) }}</td>
+            <td>{{ getYearValue(2) }}</td>
+            <td>
+              <q-linear-progress color="primary" size="20px" :value="getYearPercent(2) / 100" >
+                <div class="absolute-full flex flex-center">
+                    <q-badge color="white" text-color="accent" :label="`${getYearPercent(2)}%`" transparent />
+                </div>
+              </q-linear-progress>
+            </td>
+          </tr>
+
           <tr>
             <td>{{ getActivityName(4) }}</td>
             <td>{{ getYearValue(4) }}</td>
@@ -97,16 +107,19 @@
             <td>{{ secToHhMm(getWeekValue(weekId, 1)) }} שעות</td>
             <td class="text-accent">{{ secToHhMm(5 * 60 * 60) }} שעות</td>
           </tr>
-          <tr>
-            <td>{{ getActivityName(2) }}</td>
-            <td>{{ getWeekValue(weekId, 2) }}</td>
-            <td class="text-accent">{{ 2 }}</td>
-          </tr>
+
           <tr>
             <td>{{ getActivityName(3) }}</td>
             <td>{{ getWeekValue(weekId, 3) }}</td>
             <td class="text-accent">{{ 2 }}</td>
           </tr>
+
+          <tr>
+            <td>{{ getActivityName(2) }}</td>
+            <td>{{ getWeekValue(weekId, 2) }}</td>
+            <td class="text-accent">{{ 2 }}</td>
+          </tr>
+
           <tr>
             <td>{{ getActivityName(4) }}</td>
             <td>{{ getWeekValue(weekId, 4) }}</td>

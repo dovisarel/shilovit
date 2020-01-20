@@ -86,7 +86,10 @@ export default {
       return _.get(conf, 'label', '????')
     },
     editRow (e, row) {
-      window.console.log(row)
+      const location = `/activities/edit/${row.id}`
+
+      window.console.log(location)
+      // this.$router.push(location)
     }
   },
   async mounted () {

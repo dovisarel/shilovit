@@ -12,8 +12,8 @@ class Activity extends Model
     use SoftDeletes;
 
     public const TYPE_SELF_LEARNING = 1;
-    public const TYPE_HALACHA_LESSON = 2;
-    public const TYPE_EMONA_LESSON = 3;
+    public const TYPE_EMONA_LESSON = 2;
+    public const TYPE_HALACHA_LESSON = 3;
     public const TYPE_MONTHLY_TEST = 4;
     public const TYPE_DILIGENCE_LEARNING = 5;
 
@@ -39,11 +39,6 @@ class Activity extends Model
         'options' => 'array',
     ];
 
-    /**
-     * Get the administrator flag for the user.
-     *
-     * @return bool
-     */
     public function getTypeNameAttribute()
     {
         return self::activityTypeName($this->attributes['type_id']);
