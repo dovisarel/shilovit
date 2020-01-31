@@ -15,15 +15,15 @@
 
         <div>
           <!-- <q-btn icon="home" flat rounded to="/user/login" /> -->
-          <q-btn v-if="isAdmin" :label="user.name" icon="find_replace" flat rounded to="/user/list" />
-          <q-btn v-else :label="user.name" flat rounded to="/" />
+          <q-btn v-if="isAdmin" icon="find_replace" flat rounded @click="forgetEmulateUser" />
+          <q-btn :label="user.name" flat rounded to="/" />
         </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-2">
       <q-list>
-        <q-item-label header>קישורים חשובים</q-item-label>
+        <q-item-label header>תפריט</q-item-label>
 
         <q-item clickable tag="a" to="/">
           <q-item-section avatar>
@@ -31,17 +31,17 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>דף הבית</q-item-label>
-            <q-item-label caption>??? - ???</q-item-label>
+            <q-item-label caption>סיכום שנתי ושבועי</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item clickable tag="a" to="/activities/list">
+        <q-item clickable tag="a" to="/activities/listAll">
           <q-item-section avatar>
             <q-icon name="list" />
           </q-item-section>
           <q-item-section>
             <q-item-label>רשימת דיווחים</q-item-label>
-            <q-item-label caption>??? - ???</q-item-label>
+            <q-item-label caption>רשימת כל הדיווחים בלי סינון</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -51,7 +51,17 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>הוספת דיווח</q-item-label>
-            <q-item-label caption>??? - ???</q-item-label>
+            <q-item-label caption></q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item v-if="isAdmin" clickable tag="a" to="/user/list">
+          <q-item-section avatar>
+            <q-icon name="list" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>רשימת משתמשים</q-item-label>
+            <q-item-label caption></q-item-label>
           </q-item-section>
         </q-item>
 
@@ -61,7 +71,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>התנתק</q-item-label>
-            <q-item-label caption>ניתוק מהמערכת - צריך לעשות</q-item-label>
+            <q-item-label caption>ניתוק מהמערכת</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -71,7 +81,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>נהלי התוכנית</q-item-label>
-            <q-item-label caption>צריך להוסיף, עדיין לא נמצא</q-item-label>
+            <q-item-label caption>צריך להוסיף, עדיין לא קיים</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -107,6 +117,11 @@ export default {
       } catch (error) {
         this.$q.notify('תקלה')
       }
+    },
+    async forgetEmulateUser () {
+      await this.$store.dispatch('user/forgetEmulateUser')
+      this.$router.push('/')
+      this.$nextTick(() => this.$router.go())
     }
   },
   async mounted () {

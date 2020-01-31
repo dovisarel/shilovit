@@ -34,7 +34,8 @@ const activitiesRouters = [
       { path: 'add', component: () => import('pages/activitiesAdd.vue') },
       // { path: 'add', component: () => import('pages/activitiesAddEdit.vue') },
       // { path: 'edit/:id', component: () => import('pages/activitiesAddEdit.vue'), props: true },
-      { path: 'list', component: () => import('pages/activitiesList.vue') }
+      { path: 'list', component: () => import('pages/activitiesList.vue') },
+      { path: 'listAll', component: () => import('pages/AllActivitiesList.vue') }
     ]
   }
 ]

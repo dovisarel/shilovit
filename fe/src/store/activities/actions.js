@@ -17,7 +17,14 @@ async function add (_, payload) {
   return true
 }
 
+async function deleteRow (_, payload) {
+  await axiosInstance.post('/activities/delete', payload)
+
+  return true
+}
+
 export {
   load,
-  add
+  add,
+  deleteRow
 }

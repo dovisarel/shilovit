@@ -22,9 +22,19 @@ async function getList (context, data) {
   return response.data.users
 }
 
+async function emulateUser (context, data) {
+  await axiosInstance.post('/user/emulateUser', data)
+}
+
+async function forgetEmulateUser (context) {
+  await axiosInstance.post('/user/forgetEmulateUser')
+}
+
 export {
   register,
   login,
   logout,
-  getList
+  getList,
+  emulateUser,
+  forgetEmulateUser
 }

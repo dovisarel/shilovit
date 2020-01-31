@@ -5,9 +5,14 @@
 
       <div class="bg-white shadow-2 rounded-borders row q-mb-md q-pa-md" >
         <div class="text-primary">לשים לב:</div>
+        אפשר ללחוץ על השורות כדי לקבל פירוט.
+        <br>
+        ואפשר גם למחוק דיווחים.
+        <!--
         עקב באג אולי התחלפו הדיווחים על השיעורים של הרב מלמד והרב יזהר,
         <br>
         נא לבדוק שהדיווח שלכם תקין.
+        -->
       </div>
 
       <q-markup-table>
@@ -32,7 +37,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr @click="showList({type: 1, total: true })">
             <td>{{ getActivityName(1) }}</td>
             <td>{{ secToHhMm(getYearValue(1)) }} שעות</td>
             <td>
@@ -44,7 +49,7 @@
             </td>
           </tr>
 
-          <tr>
+          <tr @click="showList({type: 3, total: true })">
             <td>{{ getActivityName(3) }}</td>
             <td>{{ getYearValue(3) }}</td>
             <td>
@@ -56,7 +61,7 @@
             </td>
           </tr>
 
-          <tr>
+          <tr @click="showList({type: 2, total: true })">
             <td>{{ getActivityName(2) }}</td>
             <td>{{ getYearValue(2) }}</td>
             <td>
@@ -68,7 +73,7 @@
             </td>
           </tr>
 
-          <tr>
+          <tr @click="showList({type: 4, total: true })">
             <td>{{ getActivityName(4) }}</td>
             <td>{{ getYearValue(4) }}</td>
             <td>
@@ -79,7 +84,8 @@
               </q-linear-progress>
             </td>
           </tr>
-          <tr>
+
+          <tr @click="showList({type: 5, total: true })">
             <td>{{ getActivityName(5) }}</td>
             <td colspan="2" class="text-center">{{ secToHhMm(getYearValue(5)) }} שעות</td>
           </tr>
@@ -102,34 +108,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr @click="showList({type: 1, week: weekId})">
             <td>{{ getActivityName(1) }}</td>
             <td>{{ secToHhMm(getWeekValue(weekId, 1)) }} שעות</td>
             <td class="text-accent">{{ secToHhMm(5 * 60 * 60) }} שעות</td>
           </tr>
 
-          <tr>
+          <tr @click="showList({type: 3, week: weekId})">
             <td>{{ getActivityName(3) }}</td>
             <td>{{ getWeekValue(weekId, 3) }}</td>
             <td class="text-accent">{{ 2 }}</td>
           </tr>
 
-          <tr>
+          <tr @click="showList({type: 2, week: weekId})">
             <td>{{ getActivityName(2) }}</td>
             <td>{{ getWeekValue(weekId, 2) }}</td>
             <td class="text-accent">{{ 2 }}</td>
           </tr>
 
-          <tr>
+          <tr @click="showList({type: 4, week: weekId})">
             <td>{{ getActivityName(4) }}</td>
             <td>{{ getWeekValue(weekId, 4) }}</td>
             <td class="text-accent">1 בחודש</td>
           </tr>
-          <tr>
+
+          <tr @click="showList({type: 5, week: weekId})">
             <td>{{ getActivityName(5) }}</td>
             <td>{{ secToHhMm(getWeekValue(weekId, 5)) }} שעות</td>
             <td class="text-accent">רשות - לא נדרש</td>
           </tr>
+
           <tr>
             <td colspan="3">
                 <div class="flex justify-between">
@@ -145,8 +153,6 @@
       <q-page-sticky position="bottom-right" :offset="[20, 20]">
         <q-btn fab icon="add" color="accent" to="/activities/add" />
       </q-page-sticky>
-
-      <!-- <pre dir="ltr">{{ summary }}</pre> -->
     </div>
   </q-page>
 </template>
@@ -223,8 +229,8 @@ export default {
         this.weekId = pos
       }
     },
-    editRow (e, row) {
-      window.console.log(row)
+    showList (query) {
+      this.$router.push({ path: '/activities/list', query })
     }
   },
   async mounted () {
