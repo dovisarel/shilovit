@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+// use Illuminate\Support\Facades\Gate;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +25,16 @@ Route::get('/', function () {
 });
 
 Route::get('/initialData', function (Request $request) {
+    $emulateUserId = App\emulateUser::getId();
+
+    $emulateUser = User::find($emulateUserId);
+
     return [
         'success' => true,
         'message' => 'initial data',
         'isAuth' => Auth::check(),
-        'user' => Auth::user(),
-        'isAdmin' => false,
+        'user' => $emulateUser,
+        'isAdmin' => Gate::allows('is-admin'),
         'csrfToken' => csrf_token(),
     ];
 });
@@ -73,6 +78,7 @@ Route::middleware('guest')->post('/user/login', function (Request $request) {
 
 Route::match(['get', 'post'], '/user/logout', function (Request $request) {
     Auth::logout();
+    App\emulateUser::forget();
 
     return [
         'success' => true,
@@ -80,8 +86,28 @@ Route::match(['get', 'post'], '/user/logout', function (Request $request) {
     ];
 });
 
+
+Route::middleware('auth')->post('/user/emulateUser', function (Request $request) {
+    Gate::authorize('is-admin');
+
+    $validatedData = $request->validate([
+        'id' => 'bail|required|integer|min:1|exists:users',
+    ]);
+    
+    App\emulateUser::setId($validatedData['id']);
+
+    return [];
+});
+
+
+Route::middleware('auth')->post('/user/forgetEmulateUser', function (Request $request) {
+    App\emulateUser::forget();
+
+    return [];
+});
+
 Route::middleware('auth')->get('/user/getList', function (Request $request) {
-    // TODO: check if it admin
+    Gate::authorize('is-admin');
 
     return [
         'users' => User::all(),
@@ -89,7 +115,7 @@ Route::middleware('auth')->get('/user/getList', function (Request $request) {
 });
 
 Route::middleware('auth')->get('/activities/list', function (Request $request) {
-    $user_id = Auth::id();
+    $user_id = App\emulateUser::getId();
     // $validatedData = $request->validate([
     //     'id_card' => 'bail|required|min:8|max:9|luhn|unique:users',
     //     'name' => 'bail|required|min:5|max:50|unique:users',
@@ -121,7 +147,7 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
 
     $activity = new App\Activity;
 
-    $activity->user_id = Auth::id();
+    $activity->user_id = App\emulateUser::getId();;
     $activity->type_id = $validatedData['activityType'];
     $activity->time_start = date_create($validatedData['date'] . ' ' . $validatedData['startTime']);
 
@@ -146,8 +172,26 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
     ];
 });
 
+Route::middleware('auth')->post('/activities/delete', function (Request $request) {
+    $validatedData = $request->validate([
+        'id' => 'bail|required|numeric|min:1',
+    ]);
+
+    $activity = App\Activity::findOrFail($validatedData['id']);
+
+    if ($activity->user_id != App\emulateUser::getId()) {
+        abort(403, 'הדיווח הזה לא שייך לך, ולכן אי אפשר למחוק אותו.');
+    }
+
+    $activity->delete();
+
+    return [
+        
+    ];
+});
+
 Route::middleware('auth')->get('/activities/getSummary', function (Request $request) {
-    $user_id = Auth::id();
+    $user_id = App\emulateUser::getId();
 
     // $validatedData = $request->validate([
     //     'id_card' => 'bail|required|min:8|max:9|luhn|unique:users',

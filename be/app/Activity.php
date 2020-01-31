@@ -20,6 +20,7 @@ class Activity extends Model
     protected $table = 'activities';
 
     protected $appends = ['type_name'];
+    // protected $appends = ['type_name', 'date', 'start_time', 'end_time'];
 
     /**
      * The model's default values for attributes.
@@ -43,6 +44,32 @@ class Activity extends Model
     {
         return self::activityTypeName($this->attributes['type_id']);
     }
+
+    /*
+    public function getStartTimeAttribute()
+    {
+        return $this->attributes['time_start']->format('H:i');
+    }
+
+    public function getEndTimeAttribute()
+    {
+        if ($this->attributes['time_end']) {
+            return $this->attributes['time_end']->format('H:i');
+        } else {
+            return null;
+        }
+    }
+
+
+    public function getDateAttribute()
+    {
+        if ($this->attributes['time_start']) {
+            return $this->attributes['time_start']->format('Y-m-d');
+        } else {
+            return null;
+        }
+    }
+    */
 
     private static function activityTypeName($type_id)
     {
@@ -97,10 +124,10 @@ class Activity extends Model
             ],
             self::TYPE_DILIGENCE_LEARNING => [
                 'max_per_week' => 4 * 60 * 60,// 4 hour
-                'max_per_month' => 8 * 60 * 60,// 8 hour
+                'max_per_month' => 9999 * 60 * 60,// 9999 hour
                 'method_calculation' => 'time_diff',
                 // 'min_one_item' => 30 * 60,// half hour
-                'max_total' => 10 * 8 * 60 * 60,// 8 hour * 10 months
+                'max_total' => 9999 * 60 * 60,// 9999 hour * 10 months
                 'year_desired_sum' => 0,
             ],
         ];
