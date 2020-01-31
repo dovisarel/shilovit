@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 // use Illuminate\Support\Arr;
 
-class emulateUser
+class EmulateUser
 {
     public static function getId()
     {

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\EmulateUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +26,7 @@ Route::get('/', function () {
 });
 
 Route::get('/initialData', function (Request $request) {
-    $emulateUserId = App\emulateUser::getId();
+    $emulateUserId = EmulateUser::getId();
 
     $emulateUser = User::find($emulateUserId);
 
@@ -78,7 +79,7 @@ Route::middleware('guest')->post('/user/login', function (Request $request) {
 
 Route::match(['get', 'post'], '/user/logout', function (Request $request) {
     Auth::logout();
-    App\emulateUser::forget();
+    EmulateUser::forget();
 
     return [
         'success' => true,
@@ -94,14 +95,14 @@ Route::middleware('auth')->post('/user/emulateUser', function (Request $request)
         'id' => 'bail|required|integer|min:1|exists:users',
     ]);
     
-    App\emulateUser::setId($validatedData['id']);
+    EmulateUser::setId($validatedData['id']);
 
     return [];
 });
 
 
 Route::middleware('auth')->post('/user/forgetEmulateUser', function (Request $request) {
-    App\emulateUser::forget();
+    EmulateUser::forget();
 
     return [];
 });
@@ -115,7 +116,7 @@ Route::middleware('auth')->get('/user/getList', function (Request $request) {
 });
 
 Route::middleware('auth')->get('/activities/list', function (Request $request) {
-    $user_id = App\emulateUser::getId();
+    $user_id = EmulateUser::getId();
     // $validatedData = $request->validate([
     //     'id_card' => 'bail|required|min:8|max:9|luhn|unique:users',
     //     'name' => 'bail|required|min:5|max:50|unique:users',
@@ -147,7 +148,7 @@ Route::middleware('auth')->post('/activities/add', function (Request $request) {
 
     $activity = new App\Activity;
 
-    $activity->user_id = App\emulateUser::getId();;
+    $activity->user_id = EmulateUser::getId();;
     $activity->type_id = $validatedData['activityType'];
     $activity->time_start = date_create($validatedData['date'] . ' ' . $validatedData['startTime']);
 
@@ -179,7 +180,7 @@ Route::middleware('auth')->post('/activities/delete', function (Request $request
 
     $activity = App\Activity::findOrFail($validatedData['id']);
 
-    if ($activity->user_id != App\emulateUser::getId()) {
+    if ($activity->user_id != EmulateUser::getId()) {
         abort(403, 'הדיווח הזה לא שייך לך, ולכן אי אפשר למחוק אותו.');
     }
 
@@ -191,7 +192,7 @@ Route::middleware('auth')->post('/activities/delete', function (Request $request
 });
 
 Route::middleware('auth')->get('/activities/getSummary', function (Request $request) {
-    $user_id = App\emulateUser::getId();
+    $user_id = EmulateUser::getId();
 
     // $validatedData = $request->validate([
     //     'id_card' => 'bail|required|min:8|max:9|luhn|unique:users',
