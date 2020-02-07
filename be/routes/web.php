@@ -216,3 +216,5 @@ Route::middleware('auth')->get('/activities/getSummary', function (Request $requ
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::middleware('auth')->get('/ManualOperations', 'ManualOperationsController@index');
