@@ -115,6 +115,59 @@ Route::middleware('auth')->get('/user/getList', function (Request $request) {
     ];
 });
 
+Route::middleware('auth')->get('/user/getList.csv', function (Request $request) {
+    Gate::authorize('is-admin');
+
+    $users = User::all();
+
+    $f = fopen('php://memory', 'r+');
+
+    fputcsv($f, array_map(function($txt){
+        return mb_convert_encoding($txt, 'ISO-8859-8', 'UTF-8');
+    }, [
+        'id' => 'id',
+        'id_card' => 'ת.ז.',
+        'name' => 'שם',
+        'email' => 'מייל',
+        'yearLeft' => 'חלק מהשנה שעבר',
+        'year_type_1' => 'לימוד',
+        'year_type_2' => 'שיעורים - הרב יזהר',
+        'year_type_3' => 'שיעורים - הרב מלמד',
+        'year_type_4' => 'מבחנים',
+        'year_type_5' => 'שקידה',
+    ]));
+
+    foreach ($users as $user) {
+        $summary = App\Activity::getSummary($user->id, 2020);
+
+        fputcsv($f, [
+            'id' => $user->id,
+            'id_card' => $user->id_card,
+            'name' => mb_convert_encoding($user->name, 'ISO-8859-8', 'UTF-8'),
+            'email' => $user->email,
+            'yearLeft' => Arr::get($summary, 'metadata.yearLeft'),
+            'year_type_1' => (float) (Arr::get($summary, 'summary.total.1.sum') / 60 / 60),
+            'year_type_2' => (int) Arr::get($summary, 'summary.total.2.sum'),
+            'year_type_3' => (int) Arr::get($summary, 'summary.total.3.sum'),
+            'year_type_4' => (int) Arr::get($summary, 'summary.total.4.sum'),
+            'year_type_5' => (float) (Arr::get($summary, 'summary.total.5.sum') / 60 / 60),
+        ]);
+    }
+
+    rewind($f);
+    $csv = rtrim(stream_get_contents($f));
+
+    return response($csv)
+        ->withHeaders([
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-Encoding' => 'UTF-8',
+            'Content-type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename=users.csv',
+            'Expires' => '0',
+            'Pragma' => 'public',
+        ]);
+});
+
 Route::middleware('auth')->get('/activities/list', function (Request $request) {
     $user_id = EmulateUser::getId();
     // $validatedData = $request->validate([
