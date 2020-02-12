@@ -30,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
                 1,// דב שראל
                 2,// הרב יזהר
                 3,// יעקב וינברגר
+                60,// אחינעם סטרוק
             ];
 
             return in_array($user->id, $admins, true);
