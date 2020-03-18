@@ -74,7 +74,7 @@ class Activity extends Model
     private static function activityTypeName($type_id)
     {
         $names = [
-            self::TYPE_SELF_LEARNING => 'לימוד עצמי',
+            self::TYPE_SELF_LEARNING => 'שעות לימוד',
             self::TYPE_HALACHA_LESSON => 'שיעור הרב מלמד',
             self::TYPE_EMONA_LESSON => 'שיעור הרב יזהר',
             self::TYPE_MONTHLY_TEST => 'מבחן חודשי',

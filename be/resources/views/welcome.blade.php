@@ -20,8 +20,8 @@
 
         <!-- <script type="text/javascript" src="/app.js"></script> -->
 
-        <script type=text/javascript src=js/app.1ccd9ee9.js> </script>
-        <script type=text/javascript src=js/runtime.29cd8ca6.js> </script>
+        <script type=text/javascript src=js/app.cecd1984.js> </script>
+        <script type=text/javascript src=js/runtime.fefe6303.js> </script>
         <script type=text/javascript src=js/vendor.5a876ace.js> </script>
 
     </body>

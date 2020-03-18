@@ -1,6 +1,6 @@
 export default {
   types: [
-    { label: 'לימוד עצמי', value: 1, showStartTime: true, showEndTime: true },
+    { label: 'שעות לימוד', value: 1, showStartTime: true, showEndTime: true },
     { label: 'שיעור הרב יזהר', value: 2 },
     { label: 'שיעור הרב מלמד', value: 3 },
     { label: 'מבחן חודשי', value: 4, showTestsList: true, showScore: true },
